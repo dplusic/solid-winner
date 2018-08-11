@@ -18,3 +18,7 @@ functions:
       - http:
           method: get
           path: hello
+
+custom:
+  serverless-offline:
+    port: ${env:SERVERLESS_OFFLINE_PORT}
