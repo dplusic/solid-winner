@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.1",
     "@types/node": "^8.0.57",
+    "aws-sdk": "^2.291.0",
     "dotenv-cli": "^1.4.0",
     "serverless": "^1.29.2",
     "serverless-offline": "^3.25.6",

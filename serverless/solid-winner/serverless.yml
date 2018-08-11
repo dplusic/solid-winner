@@ -10,6 +10,9 @@ provider:
   name: aws
   region: ap-northeast-2
   runtime: nodejs8.10
+  environment:
+    SERVICE_NAME: ${self:service.name}
+    SERVERLESS_STAGE: ${opt:stage, self:provider.stage}
 
 functions:
   hello:
@@ -18,6 +21,28 @@ functions:
       - http:
           method: get
           path: hello
+  putUser:
+    handler: src/handler.putUser
+    events:
+      - http:
+          method: put
+          path: user
+
+resources:
+  Resources:
+    userTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.SERVICE_NAME}-user-${self:provider.environment.SERVERLESS_STAGE}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 custom:
   serverless-offline:
