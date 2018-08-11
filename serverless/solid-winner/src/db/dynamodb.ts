@@ -4,7 +4,7 @@ const getConfig = () =>
   process.env.NODE_ENV === "development"
     ? {
         region: "ap-northeast-2",
-        endpoint: `http://localhost:${process.env.DYNAMODB_PORT}`
+        endpoint: `http://localhost:${process.env.DYNAMODB_LOCAL_PORT}`
       }
     : undefined;
 

@@ -1,10 +1,10 @@
 service:
   name: solid-winner
 
-# Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
   - serverless-offline
+  - serverless-dynamodb-local
 
 provider:
   name: aws
@@ -13,6 +13,7 @@ provider:
   environment:
     SERVICE_NAME: ${self:service.name}
     SERVERLESS_STAGE: ${opt:stage, self:provider.stage}
+    DYNAMODB_LOCAL_PORT: ${env:DYNAMODB_LOCAL_PORT, '8500'}
 
 functions:
   hello:
@@ -46,4 +47,9 @@ resources:
 
 custom:
   serverless-offline:
-    port: ${env:SERVERLESS_OFFLINE_PORT}
+    port: ${env:SERVERLESS_OFFLINE_PORT, '8600'}
+
+  dynamodb:
+    start:
+      port: ${self:provider.environment.DYNAMODB_LOCAL_PORT}
+      migrate: true

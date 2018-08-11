@@ -6,7 +6,6 @@
 * `npm i`
 
 ### Test on Local
-* `docker-compose up` in different terminal.
 * `npm run offline`
 
 ### Deploy to AWS
