@@ -15,17 +15,55 @@ export const connect = () => {
   const client = new AWS.DynamoDB.DocumentClient(getConfig());
 
   return {
-    put: ({ table, data }: { table: string; data: object }) =>
+    put: <D>({
+      table,
+      data,
+      ifValueNotExists
+    }: {
+      table: string;
+      data: D;
+      ifValueNotExists?: string;
+    }) =>
       client
         .put({
           TableName: toDynamoDbTableName(table),
-          Item: data
+          Item: data,
+          ConditionExpression: ifValueNotExists
+            ? `attribute_not_exists(${ifValueNotExists})`
+            : undefined
         })
         .promise(),
-    get: ({ table, query }: { table: string; query: object }) =>
+
+    get: <D>({
+      table,
+      query
+    }: {
+      table: string;
+      query: object;
+    }): Promise<D | null> =>
       client
         .get({ TableName: toDynamoDbTableName(table), Key: query })
         .promise()
-        .then(r => r.Item)
+        .then(r => <D | null>r.Item),
+
+    batchGet: <D>({
+      table,
+      queries
+    }: {
+      table: string;
+      queries: object[];
+    }): Promise<D[]> =>
+      client
+        .batchGet({
+          RequestItems: {
+            [toDynamoDbTableName(table)]: {
+              Keys: queries
+            }
+          }
+        })
+        .promise()
+        .then(
+          r => (r.Responses ? <D[]>r.Responses[toDynamoDbTableName(table)] : [])
+        )
   };
 };

@@ -15,3 +15,5 @@ export const div = (a: Point, b: Point): Point => ({
   x: Math.floor(a.x / b.x),
   y: Math.floor(a.y / b.y)
 });
+
+export const toString = (p: Point): string => `${p.x}_${p.y}`;

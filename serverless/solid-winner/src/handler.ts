@@ -1,7 +1,8 @@
 import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
 
 import { connect as connectDb } from "./db";
-import * as User from "./Model/User";
+import * as MapIO from "./IO/Map";
+import * as UserModel from "./Model/User";
 import * as Section from "./Coordinates/Section";
 import * as View from "./Coordinates/View";
 import * as Point from "./Coordinates/Point";
@@ -30,7 +31,7 @@ export const putUser: Handler = (
 ) => {
   const userId = event.queryStringParameters!.userId;
 
-  const user: User.User = {
+  const user: UserModel.User = {
     id: userId,
     name: userId,
     position: Point.origin
@@ -64,21 +65,19 @@ export const getMap: Handler = (
 
   const db = connectDb();
 
-  db.get({
+  db.get<UserModel.User>({
     table: "user",
     query: {
       id: userId
     }
   })
-    .then(
-      user =>
-        user ? Promise.resolve(<User.User>user) : Promise.reject("No User")
-    )
+    .then(user => (user ? Promise.resolve(user) : Promise.reject("No User")))
     .then(user => Section.intersectedSections(View.fromPoint(user.position)))
-    .then(sections => {
+    .then(MapIO.getMap(db))
+    .then(maps => {
       const response = {
         statusCode: 200,
-        body: JSON.stringify(sections)
+        body: JSON.stringify(maps)
       };
 
       cb(undefined, response);
