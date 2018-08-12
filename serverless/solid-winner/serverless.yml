@@ -28,6 +28,12 @@ functions:
       - http:
           method: put
           path: user
+  getMap:
+    handler: src/handler.getMap
+    events:
+      - http:
+          method: get
+          path: map
 
 resources:
   Resources:

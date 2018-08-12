@@ -21,6 +21,11 @@ export const connect = () => {
           TableName: toDynamoDbTableName(table),
           Item: data
         })
+        .promise(),
+    get: ({ table, query }: { table: string; query: object }) =>
+      client
+        .get({ TableName: toDynamoDbTableName(table), Key: query })
         .promise()
+        .then(r => r.Item)
   };
 };
