@@ -11,12 +11,14 @@
     "offline": "serverless dynamodb install && serverless offline start"
   },
   "dependencies": {
+    "ramda": "^0.25.0",
     "source-map-support": "^0.5.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.1",
     "@types/jest": "^23.3.1",
     "@types/node": "^8.0.57",
+    "@types/ramda": "^0.25.36",
     "aws-sdk": "^2.291.0",
     "jest": "^23.5.0",
     "serverless": "^1.29.2",
